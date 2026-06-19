@@ -6,9 +6,9 @@ const state = {
 
 const whatsappUrl = 'https://minatmohonloan.wasap.my';
 const socialProofMessages = [
-  'RM 5,000 personal loan from Selangor was approved a few minutes ago',
-  'RM 12,000 business loan from Kuala Lumpur was reviewed by our consultant',
-  'RM 3,000 personal loan application was submitted successfully'
+  'Pinjaman peribadi RM 5,000 dari Selangor telah diluluskan sebentar tadi',
+  'Pinjaman perniagaan RM 12,000 dari Kuala Lumpur sedang disemak oleh perunding kami',
+  'Permohonan pinjaman RM 3,000 telah berjaya dihantar'
 ];
 
 function eventId(prefix) {
@@ -96,7 +96,7 @@ document.getElementById('purchaseForm').addEventListener('submit', async (event)
 
   const data = new FormData(form);
   button.disabled = true;
-  status.textContent = 'Submitting...';
+  status.textContent = 'Sedang menghantar...';
 
   try {
     const response = await trackPurchase({
@@ -113,14 +113,14 @@ document.getElementById('purchaseForm').addEventListener('submit', async (event)
   } catch (error) {
     console.error('Submission tracking failed:', error);
   } finally {
-    status.textContent = 'Application sent. Opening WhatsApp...';
+    status.textContent = 'Permohonan dihantar. Sedang membuka WhatsApp...';
     window.location.href = whatsappUrl;
     button.disabled = false;
   }
 });
 
 boot().catch(() => {
-  document.getElementById('status').textContent = 'Tracking config could not load.';
+  document.getElementById('status').textContent = 'Konfigurasi tracking tidak dapat dimuatkan.';
 });
 
 function startSocialProof() {
