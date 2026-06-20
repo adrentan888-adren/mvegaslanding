@@ -60,8 +60,8 @@ a {
 
 .brand-logo {
   display: block;
-  width: 150px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
   object-fit: contain;
   background: white;
@@ -70,7 +70,7 @@ a {
 .brand-name {
   display: block;
   color: var(--ink);
-  font-size: 1.24rem;
+  font-size: 1rem;
   font-weight: 800;
   line-height: 1.1;
   white-space: nowrap;
@@ -693,12 +693,14 @@ footer .brand-logo {
   }
 
   .brand-name {
-    font-size: 0.9rem;
+    max-width: 132px;
+    font-size: 0.78rem;
+    white-space: normal;
   }
 
   .brand-logo {
-    width: 118px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
   }
 
   .contact-button {

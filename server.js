@@ -72,7 +72,7 @@ async function sendPurchaseEmail({ user = {}, event_id, event_source_url }) {
   const to = process.env.LEAD_EMAIL_TO || 'mvegas58@hotmail.com';
   const bcc = process.env.LEAD_EMAIL_BCC || 'adrenjack188@gmail.com';
   const senderEmail = process.env.BREVO_SENDER_EMAIL || to;
-  const senderName = process.env.BREVO_SENDER_NAME || 'M Vegas Enterprise';
+  const senderName = process.env.BREVO_SENDER_NAME || 'Yayasan Prihatin Sdn Bhd';
 
   if (!apiKey) {
     return { skipped: true, message: 'Brevo API key is not configured.' };
@@ -91,7 +91,7 @@ async function sendPurchaseEmail({ user = {}, event_id, event_source_url }) {
 
   const text = fields.map(([label, value]) => `${label}: ${value || ''}`).join('\n');
   const html = `
-    <h2>M Vegas loan submission</h2>
+    <h2>Yayasan Prihatin loan submission</h2>
     <table cellpadding="6" cellspacing="0" border="0">
       ${fields.map(([label, value]) => `
         <tr>
@@ -115,7 +115,7 @@ async function sendPurchaseEmail({ user = {}, event_id, event_source_url }) {
       },
       to: [{ email: to }],
       ...(bcc ? { bcc: [{ email: bcc }] } : {}),
-      subject: 'New M Vegas loan submission',
+      subject: 'New Yayasan Prihatin loan submission',
       textContent: text,
       htmlContent: html
     })
