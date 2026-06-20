@@ -1,16 +1,16 @@
 :root {
   color-scheme: light;
-  --green-900: #262626;
-  --green-800: #5e5e5e;
-  --green-700: #f47b20;
-  --green-600: #ff922f;
-  --green-100: #fff1e6;
-  --ink: #242424;
-  --muted: #6f6f6f;
-  --line: #e6e0dc;
-  --paper: #faf8f6;
+  --green-900: #0f3d2e;
+  --green-800: #146447;
+  --green-700: #17834f;
+  --green-600: #22a15a;
+  --green-100: #eaf7ef;
+  --ink: #102018;
+  --muted: #607268;
+  --line: #dfe8e3;
+  --paper: #f7fbf8;
   --white: #ffffff;
-  --orange: #f47b20;
+  --orange: #f5a623;
 }
 
 * {
@@ -92,7 +92,7 @@ a {
 
 .hero {
   background:
-    linear-gradient(135deg, #f47b20 0%, #4a4a4a 54%, #242424 100%);
+    linear-gradient(135deg, #1b7a4c 0%, #0f3d2e 58%, #0b2c25 100%);
   color: white;
 }
 
@@ -113,7 +113,7 @@ a {
   border-radius: 999px;
   padding: 8px 13px;
   background: rgba(255, 255, 255, 0.16);
-  color: #fff5eb;
+  color: #eefbf3;
   font-size: 0.9rem;
   font-weight: 800;
 }
@@ -139,7 +139,7 @@ a {
   border-radius: 6px;
   padding: 2px 8px;
   background: #fff3bf;
-  color: #242424;
+  color: var(--green-900);
   font-weight: 900;
 }
 
