@@ -581,7 +581,7 @@ footer .brand-logo {
   }
 
   .application-card h2 {
-    font-size: 1.12rem;
+    display: none;
   }
 
   .form-intro {
