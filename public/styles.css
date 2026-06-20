@@ -195,6 +195,10 @@ a {
   text-align: center;
 }
 
+.mobile-form-promo {
+  display: none;
+}
+
 .form-intro {
   margin: 0 0 4px;
   border-radius: 7px;
@@ -542,48 +546,78 @@ footer .brand-logo {
     padding: 16px;
   }
 
+  .mobile-form-promo {
+    display: grid;
+    gap: 3px;
+    border-radius: 7px;
+    padding: 7px 10px;
+    background: #f4fbf7;
+    color: var(--green-900);
+    text-align: center;
+  }
+
+  .mobile-form-promo strong {
+    font-size: 0.88rem;
+    line-height: 1.12;
+  }
+
+  .mobile-form-promo span {
+    color: var(--green-800);
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .mobile-form-promo mark {
+    border-radius: 5px;
+    padding: 1px 5px;
+    background: #fff3bf;
+    color: var(--green-900);
+    font-weight: 900;
+  }
+
   .form-content {
-    gap: 8px;
+    gap: 7px;
   }
 
   .application-card h2 {
-    font-size: 1.28rem;
+    font-size: 1.12rem;
   }
 
   .form-intro {
     margin-bottom: 1px;
-    padding: 7px 10px;
-    font-size: 0.8rem;
+    padding: 6px 9px;
+    font-size: 0.74rem;
     line-height: 1.32;
   }
 
   label {
     gap: 5px;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
   }
 
   input,
   select {
-    min-height: 38px;
+    min-height: 36px;
     border-radius: 6px;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
   }
 
   button {
-    min-height: 44px;
-    font-size: 0.94rem;
+    min-height: 42px;
+    font-size: 0.9rem;
   }
 
   .field-reassurance {
     margin: -4px 0 0;
-    font-size: 0.74rem;
+    font-size: 0.7rem;
     line-height: 1.3;
   }
 
   .terms,
   .note,
   .status {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     line-height: 1.32;
   }
 
