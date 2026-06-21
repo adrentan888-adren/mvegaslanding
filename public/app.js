@@ -6,9 +6,14 @@ const state = {
 
 const whatsappUrl = 'https://minatmohonloan.wasap.my';
 const socialProofMessages = [
-  'Pinjaman peribadi RM 5,000 dari Selangor telah diluluskan sebentar tadi',
-  'Pinjaman perniagaan RM 12,000 dari Kuala Lumpur sedang disemak oleh perunding kami',
-  'Permohonan pinjaman RM 3,000 telah berjaya dihantar'
+  'Permohonan RM7,200 oleh A****n bin S*****i dari Klang telah diluluskan 27 minit yang lalu.',
+  'Permohonan RM10,800 oleh F****z bin R*****i dari Petaling Jaya telah diluluskan 43 minit yang lalu.',
+  'Permohonan RM14,500 oleh N****l bin A*****d dari Puchong telah diluluskan 1 jam yang lalu.',
+  'Permohonan RM5,300 oleh S****l bin H*****i dari Subang Jaya telah diluluskan 1 jam 18 minit yang lalu.',
+  'Permohonan RM2,100 oleh R****n bin M*****d dari Rawang telah diluluskan 2 jam yang lalu.',
+  'Permohonan RM8,600 oleh K****r bin A*****n dari Ampang telah diluluskan 2 jam 35 minit yang lalu.',
+  'Permohonan RM12,000 oleh Z****l bin R*****i dari Selayang telah diluluskan 3 jam yang lalu.',
+  'Permohonan RM4,700 oleh I****n bin Y*****b dari Gombak telah diluluskan 3 jam 42 minit yang lalu.'
 ];
 
 function eventId(prefix) {
