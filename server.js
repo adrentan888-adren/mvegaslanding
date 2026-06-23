@@ -129,30 +129,37 @@ async function sendPurchaseEmail({ user = {}, event_id, event_source_url }) {
   return result;
 }
 
-async function appendLeadToGoogleSheet({ user = {}, event_id, event_source_url, metaOk, emailOk }) {
-  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
-  const secret = process.env.GOOGLE_SHEET_WEBHOOK_SECRET;
+async function saveLeadToSupabase({ req, user = {}, event_id, event_source_url, metaOk, emailOk }) {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const table = process.env.SUPABASE_LEADS_TABLE || 'leads';
 
-  if (!webhookUrl) {
-    return { skipped: true, message: 'Google Sheet webhook is not configured.' };
+  if (!supabaseUrl || !serviceRoleKey) {
+    return { skipped: true, message: 'Supabase lead storage is not configured.' };
   }
 
-  const targetUrl = new URL(webhookUrl);
-  if (secret) targetUrl.searchParams.set('secret', secret);
+  const endpoint = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/${encodeURIComponent(table)}`;
 
-  const response = await fetch(targetUrl, {
+  const response = await fetch(endpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
     body: JSON.stringify({
-      submittedAt: new Date().toISOString(),
-      fullName: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+      submitted_at: new Date().toISOString(),
+      full_name: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
       phone: user.phone,
-      loanAmount: user.loanAmount,
+      loan_amount: user.loanAmount,
       state: user.state,
-      eventSourceUrl: event_source_url,
-      eventId: event_id,
-      metaStatus: metaOk ? 'success' : 'fail',
-      emailStatus: emailOk ? 'success' : 'fail'
+      source_url: event_source_url,
+      event_id,
+      meta_status: metaOk ? 'success' : 'fail',
+      email_status: emailOk ? 'success' : 'fail',
+      user_agent: req.headers['user-agent'],
+      client_ip: getClientIp(req)
     })
   });
 
@@ -165,10 +172,10 @@ async function appendLeadToGoogleSheet({ user = {}, event_id, event_source_url, 
   }
 
   if (!response.ok || result?.ok === false) {
-    throw new Error(result?.message || 'Google Sheet append failed.');
+    throw new Error(result?.message || result?.hint || 'Supabase lead storage failed.');
   }
 
-  return result;
+  return { ok: true };
 }
 
 app.get('/api/config', (req, res) => {
@@ -238,8 +245,8 @@ app.post('/api/meta-capi', async (req, res) => {
   }
 
   let emailResult;
-  let sheetResult;
-  let sheetError;
+  let storageResult;
+  let storageError;
   if (event_name === 'Purchase') {
     try {
       emailResult = await sendPurchaseEmail({ user, event_id, event_source_url });
@@ -255,7 +262,8 @@ app.post('/api/meta-capi', async (req, res) => {
     }
 
     try {
-      sheetResult = await appendLeadToGoogleSheet({
+      storageResult = await saveLeadToSupabase({
+        req,
         user,
         event_id,
         event_source_url,
@@ -263,7 +271,7 @@ app.post('/api/meta-capi', async (req, res) => {
         emailOk: !emailResult?.skipped
       });
     } catch (error) {
-      sheetError = error.message;
+      storageError = error.message;
     }
   }
 
@@ -273,9 +281,9 @@ app.post('/api/meta-capi', async (req, res) => {
     meta: result,
     emailOk: event_name === 'Purchase' ? !emailResult?.skipped : undefined,
     email: emailResult,
-    sheetOk: event_name === 'Purchase' ? Boolean(sheetResult && !sheetResult.skipped) : undefined,
-    sheet: sheetResult,
-    sheetError
+    storageOk: event_name === 'Purchase' ? Boolean(storageResult && !storageResult.skipped) : undefined,
+    storage: storageResult,
+    storageError
   });
 });
 
