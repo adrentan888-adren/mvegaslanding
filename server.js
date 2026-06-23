@@ -129,6 +129,48 @@ async function sendPurchaseEmail({ user = {}, event_id, event_source_url }) {
   return result;
 }
 
+async function appendLeadToGoogleSheet({ user = {}, event_id, event_source_url, metaOk, emailOk }) {
+  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+  const secret = process.env.GOOGLE_SHEET_WEBHOOK_SECRET;
+
+  if (!webhookUrl) {
+    return { skipped: true, message: 'Google Sheet webhook is not configured.' };
+  }
+
+  const targetUrl = new URL(webhookUrl);
+  if (secret) targetUrl.searchParams.set('secret', secret);
+
+  const response = await fetch(targetUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      submittedAt: new Date().toISOString(),
+      fullName: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+      phone: user.phone,
+      loanAmount: user.loanAmount,
+      state: user.state,
+      eventSourceUrl: event_source_url,
+      eventId: event_id,
+      metaStatus: metaOk ? 'success' : 'fail',
+      emailStatus: emailOk ? 'success' : 'fail'
+    })
+  });
+
+  const text = await response.text();
+  let result;
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch {
+    result = { message: text };
+  }
+
+  if (!response.ok || result?.ok === false) {
+    throw new Error(result?.message || 'Google Sheet append failed.');
+  }
+
+  return result;
+}
+
 app.get('/api/config', (req, res) => {
   res.json({
     pixelId: process.env.META_PIXEL_ID || '',
@@ -196,6 +238,8 @@ app.post('/api/meta-capi', async (req, res) => {
   }
 
   let emailResult;
+  let sheetResult;
+  let sheetError;
   if (event_name === 'Purchase') {
     try {
       emailResult = await sendPurchaseEmail({ user, event_id, event_source_url });
@@ -209,6 +253,18 @@ app.post('/api/meta-capi', async (req, res) => {
         emailOk: false
       });
     }
+
+    try {
+      sheetResult = await appendLeadToGoogleSheet({
+        user,
+        event_id,
+        event_source_url,
+        metaOk,
+        emailOk: !emailResult?.skipped
+      });
+    } catch (error) {
+      sheetError = error.message;
+    }
   }
 
   res.json({
@@ -216,7 +272,10 @@ app.post('/api/meta-capi', async (req, res) => {
     metaOk,
     meta: result,
     emailOk: event_name === 'Purchase' ? !emailResult?.skipped : undefined,
-    email: emailResult
+    email: emailResult,
+    sheetOk: event_name === 'Purchase' ? Boolean(sheetResult && !sheetResult.skipped) : undefined,
+    sheet: sheetResult,
+    sheetError
   });
 });
 
